@@ -91,6 +91,10 @@ def example_data():
         Employee(name='Jumal Qazi', dept=dpt, fav_color='orange'),
         Employee(name='Balloonicorn', fav_color='rainbow'),
     ]
+
+    # this was a clever way of creating both tables simulatneously. note that we had to define
+    # the Department instances before defining the Employee instances because they are referenced
+    # in Employee (the table is created by the relationship in the Employee table instructions)
     db.session.add_all(employees)
     db.session.commit()
 
@@ -232,13 +236,13 @@ if __name__ == "__main__":
 
     # Find all employees where we don't know which department they belong to (Null dept_code)
     emp_without_dept = Employee.query.filter(Department.dept_code.is_(None)).all()
+    emp_without_dept_alt = Employee.query.filter(Employee.dept_code.is_(None)).all()
     print emp_without_dept
 
     # Get a list of tuples with just the name of everyone whose favorite color is orange
     emp_orange = db.session.query(Employee.name).filter(Employee.fav_color == 'orange').all()
 
     # Find all employees who work in 'Administration'
-    # objects
     emp_admin = db.session.query(Employee).filter(Department.dept == 'Administration').all()
     # names only
     emp_admin_names = db.session.query(Employee.name).filter(Department.dept == 'Administration').all()
